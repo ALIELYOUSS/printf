@@ -5,51 +5,85 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: alel-you <alel-you@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/11/14 01:29:26 by alel-you          #+#    #+#             */
-/*   Updated: 2024/11/14 21:09:54 by alel-you         ###   ########.fr       */
+/*   Created: 2024/12/04 17:24:20 by alel-you          #+#    #+#             */
+/*   Updated: 2024/12/07 16:22:18 by alel-you         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "lib.h"
-#include <string.h>
-void	ft_check_format(char *buff, ...)
-{
-	va_list	args;
-	va_start(args, buff);
-	int	i;
+#include "libftprintf.h"
 
-	i = 0;
-	while (buff[i])
-	{
-		if (buff[i] == '%' && buff[i + 1] == 'd')
-		{
-			i += 2;
-			void * x = va_arg(args, void *);
-			ft_putnbr_fd((int)x, 1);
-			continue ;
-		}
-		if (buff[i] == '%' && buff[i + 1] == 's')
-		{
-			i += 2;
-			void * x = va_arg(args, void *);
-			write(1, (char *)x, strlen((char *)x));
-			continue ;
-		}
-		if (buff[i] == '%' && buff[i + 1] == 'c')
-		{
-			i += 2;
-			void * x = va_arg(args, void *);
-			ft_putchar_fd((char)x, 1);
-			continue ;
-		}
-		write(1, &buff[i], 1);
-		i++;
-	}
+static int	check_format(char a, char b)
+{
+	if (a == '%' && b == 'c')
+		return (1);
+	if (a == '%' && b == 's')
+		return (2);
+	if (a == '%' && b == 'd')
+		return (3);
+	if (a == '%' && b == 'i')
+		return (4);
+	if (a == '%' && b == 'p')
+		return (5);
+	if (a == '%' && b == 'x')
+		return (6);
+	if (a == '%' && b == 'X')
+		return (7);
+	if (a == '%' && b == 'u')
+		return (8);
+	if (a == '%' && b == '%')
+		return (9);
+	return (0);
 }
 
-int main()
+static int	impl_format(va_list args, int check)
 {
-	int i = 5;
-	ft_check_format("tset1 == %d || %s || %c\n", i, "gggg", 'c');
-	printf("tset1 == %d || %s || %c\n", i, "gggg", 'c');
+	int	count;
+
+	count = 0;
+	if (check == 1)
+		count += ft_putchar(va_arg(args, int));
+	if (check == 2)
+		count += ft_putstr(va_arg(args, char *));
+	if (check == 3 || check == 4)
+		count += ft_putnbr(va_arg(args, int));
+	if (check == 5)
+		count += ft_put_address(va_arg(args, void *));
+	if (check == 6)
+		count += ft_putlow_hexa(va_arg(args, unsigned int));
+	if (check == 7)
+		count += ft_putupp_hexa(va_arg(args, unsigned int));
+	if (check == 8)
+		count += ft_putunbr(va_arg(args, unsigned int));
+	if (check == 9)
+		count += ft_putchar('%');
+	return (count);
+}
+
+int	ft_printf(const char *input, ...)
+{
+	va_list	args;
+	int		count;
+	int		i;
+	int		check;
+
+	count = 0;
+	i = 0;
+	check = 0;
+	if (!input)
+		return (ft_putstr(NULL));
+	va_start(args, input);
+	while (input[i])
+	{
+		check = check_format(input[i], input[i + 1]);
+		if (check > 0)
+		{
+			i += 2;
+			count += impl_format(args, check);
+			continue ;
+		}
+		count += ft_putchar(input[i]);
+		i++;
+	}
+	va_end(args);
+	return (count);
 }

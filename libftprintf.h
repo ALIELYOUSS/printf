@@ -1,21 +1,28 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   lib.h                                              :+:      :+:    :+:   */
+/*   libftprintf.h                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: alel-you <alel-you@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/11/14 01:00:56 by alel-you          #+#    #+#             */
-/*   Updated: 2024/11/14 02:52:34 by alel-you         ###   ########.fr       */
+/*   Created: 2024/12/04 16:56:14 by alel-you          #+#    #+#             */
+/*   Updated: 2024/12/07 16:30:23 by alel-you         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef LIB_H
-# define LIB_H
-# include <stdarg.h>
+#ifndef LIBFTPRINTF_H
+# define LIBFTPRINTF_H
 # include <unistd.h>
-# include <stdio.h>
-void	ft_check_format(char *buff, ...);
-void	ft_putchar_fd(char c, int fd);
-void	ft_putnbr_fd(int n, int fd);
+# include <stdarg.h>
+# include <limits.h>
+
+int	ft_putchar(char c);
+int	ft_putnbr(int nb);
+int	ft_putlow_hexa(unsigned long nb);
+int	ft_putupp_hexa(unsigned long nb);
+int	ft_putunbr(unsigned int nb);
+int	ft_putstr(char *str);
+int	ft_put_address(void *loc);
+int	ft_printf(const char *input, ...);
+
 #endif

@@ -5,35 +5,33 @@
 #                                                     +:+ +:+         +:+      #
 #    By: alel-you <alel-you@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
-#    Created: 2024/11/14 02:39:52 by alel-you          #+#    #+#              #
-#    Updated: 2024/11/14 02:52:11 by alel-you         ###   ########.fr        #
+#    Created: 2024/12/04 18:47:04 by alel-you          #+#    #+#              #
+#    Updated: 2024/12/07 19:07:10 by alel-you         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-FILES = ft_printf.c ft_putchar_fd.c ft_putnb.c \
+FILES = ft_printf.c ft_printf_utils.c ft_printf_Cutils.c
 
-OBJF = $(FILES:.c=.o)
+OBJCF = $(FILES:.c=.o)
 
-CC = cc 
+CFLAGS = -Wall -Wextra -Werror
 
-FLAGS = -Wall -Wextra -Werror
+CC = cc
 
-NAME = lib.a
+NAME = libftprintf.a
 
 all: $(NAME)
 
-%.o:%.c lib.h
-	@$(CC) $(FLAGS) -c $< -o $@
+%.o: %.c libftprintf.h
+	$(CC) $(CFLAGS) -c $< -o $@
 
-$(NAME):$(OBJF)
-	ar rc $(NAME) $(OBJF)
+$(NAME): $(OBJCF)
+	@ar rc $(NAME) $(OBJCF)
+
+re: clean fclean all
 
 clean:
-	@rm -rf $(OBJF)
+	rm -rf $(OBJCF)
 
 fclean: clean
-	@rm -rf $(NAME)
-
-re: fclean all
-
-.PHONY: clean 
+	rm -rf $(NAME)
